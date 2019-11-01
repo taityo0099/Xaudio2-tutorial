@@ -1,0 +1,7 @@
+std::string
+std::vector
+std::map
+std::shared_ptr
+std::weak_ptr
+std::list
+std::array

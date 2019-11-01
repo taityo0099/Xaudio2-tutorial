@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.421
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Xaudio2入門編", "Xaudio2入門編\Xaudio2入門編.vcxproj", "{1EF0E1EF-6515-4F55-A931-2D930A3031AF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1EF0E1EF-6515-4F55-A931-2D930A3031AF}.Debug|x64.ActiveCfg = Debug|x64
+		{1EF0E1EF-6515-4F55-A931-2D930A3031AF}.Debug|x64.Build.0 = Debug|x64
+		{1EF0E1EF-6515-4F55-A931-2D930A3031AF}.Debug|x86.ActiveCfg = Debug|Win32
+		{1EF0E1EF-6515-4F55-A931-2D930A3031AF}.Debug|x86.Build.0 = Debug|Win32
+		{1EF0E1EF-6515-4F55-A931-2D930A3031AF}.Release|x64.ActiveCfg = Release|x64
+		{1EF0E1EF-6515-4F55-A931-2D930A3031AF}.Release|x64.Build.0 = Release|x64
+		{1EF0E1EF-6515-4F55-A931-2D930A3031AF}.Release|x86.ActiveCfg = Release|Win32
+		{1EF0E1EF-6515-4F55-A931-2D930A3031AF}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7F557152-5352-4108-B1A5-3A2C1093AD88}
+	EndGlobalSection
+EndGlobal
