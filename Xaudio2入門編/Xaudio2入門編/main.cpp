@@ -36,40 +36,69 @@ int main()
 	auto hr = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
 	_ASSERT(hr == S_OK);
 	{
-		Microsoft::WRL::ComPtr<IXAudio2>xaudio2 = nullptr;
-
-		//Xaudio2
-		hr = XAudio2Create(&xaudio2, 0);
-		_ASSERT(hr == S_OK);
+		//オーディオ
+		Microsoft::WRL::ComPtr<IXAudio2>audio = nullptr;
+		{
+			//Xaudio2
+			hr = XAudio2Create(&audio);
+			_ASSERT(hr == S_OK);
+		}
 
 		//マスタリングボイス
 		IXAudio2MasteringVoice* mastaring = nullptr;
-		
-		hr = xaudio2->CreateMasteringVoice(&mastaring);
-		_ASSERT(hr == S_OK);
+		{
+			hr = audio->CreateMasteringVoice(&mastaring);
+			_ASSERT(hr == S_OK);
+		}
 
-
-		//波形データの情報
-		WAVEFORMATEXTENSIBLE fmt{};
-		fmt.Format.cbSize = sizeof(WAVEFORMATEXTENSIBLE) - sizeof(WAVEFORMATEX);
-		fmt.Format.nSamplesPerSec = sample;
-		fmt.Format.wBitsPerSample = bit;
-		fmt.Format.nChannels = channel;
-		fmt.Format.nBlockAlign = fmt.Format.nChannels * fmt.Format.wBitsPerSample / 8;
-		fmt.Format.nAvgBytesPerSec = fmt.Format.nSamplesPerSec * fmt.Format.nBlockAlign;
-		fmt.Format.wFormatTag = WAVE_FORMAT_EXTENSIBLE;
-		fmt.dwChannelMask = spk[fmt.Format.nChannels - 1];
-		fmt.Samples.wValidBitsPerSample = fmt.Format.wBitsPerSample;
-		fmt.SubFormat = KSDATAFORMAT_SUBTYPE_IEEE_FLOAT;
-		
 		//ソースボイス
 		IXAudio2SourceVoice* sourceVoice = nullptr;
+		{
+			//波形データの情報
+			WAVEFORMATEXTENSIBLE fmt{};
+			fmt.Format.cbSize			= sizeof(WAVEFORMATEXTENSIBLE) - sizeof(WAVEFORMATEX);
+			fmt.Format.nSamplesPerSec	= sample;
+			fmt.Format.wBitsPerSample	= bit;
+			fmt.Format.nChannels		= channel;
+			fmt.Format.nBlockAlign		= fmt.Format.nChannels * fmt.Format.wBitsPerSample / 8;
+			fmt.Format.nAvgBytesPerSec	= fmt.Format.nSamplesPerSec * fmt.Format.nBlockAlign;
+			fmt.Format.wFormatTag		= WAVE_FORMAT_EXTENSIBLE;
+			fmt.dwChannelMask			= spk[fmt.Format.nChannels - 1];
+			fmt.Samples.wValidBitsPerSample	= fmt.Format.wBitsPerSample;
+			fmt.SubFormat				= KSDATAFORMAT_SUBTYPE_IEEE_FLOAT;
 
-		hr = xaudio2->CreateSourceVoice(&sourceVoice,0);
-		_ASSERT(hr == S_OK);
-
+			hr = audio->CreateSourceVoice(&sourceVoice, (WAVEFORMATEX*)&fmt,0,1.0f,nullptr);
+			_ASSERT(hr == S_OK);
+		}
 		
+		//｢ラ｣の音データ
+		std::vector<float>R(sample * channel);
+		{
+			for (size_t i = 0; i < R.size();i += channel)
+			{
+				R[i] = std::sin(2.0f * std::acos(-1.0f) * 440.0f * i / float(sample));
+				R[i + 1] = R[i];
+			}
+		}
 
+		//波形データをバッファに載せる
+		{
+			XAUDIO2_BUFFER buffer{};
+			buffer.AudioBytes = sizeof(R[0] * R.size());
+			buffer.pAudioData = (unsigned char*)R.data();
+			hr = sourceVoice->SubmitSourceBuffer(&buffer);
+			_ASSERT(hr == S_OK);
+		}
+		//再生する
+		{
+			hr = sourceVoice->Start();
+			_ASSERT(hr == S_OK);
+		}
+		Sleep(10000);
+		{
+			hr = sourceVoice->Stop();
+			_ASSERT(hr == S_OK);
+		}
 
 		sourceVoice->DestroyVoice();
 		mastaring->DestroyVoice();
