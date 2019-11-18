@@ -102,6 +102,7 @@ int main()
 
 		sourceVoice->DestroyVoice();
 		mastaring->DestroyVoice();
+		//SAFE_RELEASE(audio);
 	}
 	CoUninitialize();
 	return 0;
